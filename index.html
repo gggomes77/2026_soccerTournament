@@ -714,6 +714,102 @@ html, body {
   .sc-in { font-size: 0.95rem; padding: 0.28rem; }
   .asc-row { grid-template-columns: 1fr; }
 }
+/* ── SEDE / LOCATION ─────────────────────────────────── */
+.sede-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+@media(max-width: 700px) {
+  .sede-grid { grid-template-columns: 1fr; }
+}
+
+.map-wrap {
+  grid-row: span 2;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border2);
+  min-height: 340px;
+  background: var(--g2);
+}
+.map-wrap iframe {
+  width: 100%; height: 100%;
+  min-height: 340px;
+  border: none; display: block;
+  filter: saturate(0.6) brightness(0.85);
+}
+
+.info-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+  backdrop-filter: blur(8px);
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.info-card-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--lime);
+  line-height: 1;
+}
+.info-card-addr {
+  font-size: 0.85rem; color: var(--muted2); line-height: 1.5;
+}
+.info-card-addr strong { color: var(--white); display: block; margin-bottom: 0.1rem; }
+.btn-directions {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 0.4rem;
+  background: var(--lime); color: #021008;
+  font-family: var(--font-cond); font-weight: 800;
+  font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.55rem 1.1rem; border-radius: 7px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  align-self: flex-start;
+}
+.btn-directions:hover { opacity: 0.85; box-shadow: 0 0 18px rgba(57,255,106,0.3); }
+
+.how-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+  backdrop-filter: blur(8px);
+}
+.how-card-title {
+  font-family: var(--font-cond); font-size: 0.75rem; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 0.85rem;
+}
+.how-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.how-item { display: flex; gap: 0.85rem; align-items: flex-start; }
+.how-icon {
+  font-size: 1.4rem; line-height: 1;
+  flex-shrink: 0; margin-top: 0.1rem;
+}
+.how-text { flex: 1; }
+.how-text strong {
+  font-family: var(--font-cond); font-size: 1rem; font-weight: 800;
+  letter-spacing: 0.04em; color: var(--white); display: block;
+  margin-bottom: 0.2rem;
+}
+.how-text span { font-size: 0.8rem; color: var(--muted2); line-height: 1.5; }
+.how-text a { color: var(--lime); text-decoration: none; }
+.how-text a:hover { text-decoration: underline; }
+
+.warning-banner {
+  background: rgba(255,209,0,0.07);
+  border: 1px solid rgba(255,209,0,0.25);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.1rem;
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  font-size: 0.8rem; color: var(--muted2); line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.warning-banner .wi { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.05rem; }
+.warning-banner strong { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -729,6 +825,7 @@ html, body {
     <button class="ntab" data-tab="classifica" onclick="go('classifica',this)">🏆 Classifica</button>
     <button class="ntab" data-tab="marcatori" onclick="go('marcatori',this)">⚽ Marcatori</button>
     <button class="ntab" data-tab="squadre" onclick="go('squadre',this)">👥 Squadre</button>
+    <button class="ntab" data-tab="sede" onclick="go('sede',this)">📍 Sede</button>
   </div>
   <div class="nav-right">
     <div class="spill wait" id="spill"><div class="sdot pulse"></div><span id="spill-txt">...</span></div>
@@ -821,6 +918,118 @@ html, body {
       <div><div class="sec-title">Le <em>Squadre</em></div><div class="sec-note">Clicca per vedere programma e risultati</div></div>
     </div>
     <div class="teams-grid" id="teams-grid"></div>
+  </section>
+  <!-- SEDE -->
+  <section class="section" id="sec-sede">
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">La <em>Sede</em></div>
+        <div class="sec-note">Dove si gioca · Come arrivare</div>
+      </div>
+    </div>
+
+    <div class="warning-banner">
+      <div class="wi">⚠️</div>
+      <div>
+        <strong>Attenzione al guado del torrente Secca</strong> — La strada di accesso al campo
+        passa su un guado che in caso di pioggia intensa può allagarsi e bloccare l'accesso.
+        Controlla le condizioni meteo prima di partire e considera percorsi alternativi se piove forte.
+      </div>
+    </div>
+
+    <div class="sede-grid">
+
+      <!-- Map -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps?q=44.4936468,8.922206&z=16&output=embed"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <!-- Info card -->
+      <div class="info-card">
+        <div class="info-card-title">⚽ Campo Sportivo Negrotto</div>
+        <div class="info-card-addr">
+          <strong>📍 Indirizzo</strong>
+          Via Negrotto<br>
+          16010 Pedemonte GE<br>
+          Genova, Liguria
+        </div>
+        <div class="info-card-addr">
+          <strong>📞 Telefono</strong>
+          +39 010 459 0170
+        </div>
+        <div class="info-card-addr">
+          <strong>🏟️ Struttura</strong>
+          2 campi da calcio a 7 · Spogliatoi · Bar del Serra
+        </div>
+        <a class="btn-directions"
+           href="https://maps.app.goo.gl/ZHMwRF7RBdEyjWhG9"
+           target="_blank" rel="noopener">
+          🗺️ Apri Percorso in Maps
+        </a>
+      </div>
+
+      <!-- How to get there -->
+      <div class="how-card">
+        <div class="how-card-title">🧭 Come arrivare</div>
+        <div class="how-list">
+
+          <div class="how-item">
+            <div class="how-icon">🚗</div>
+            <div class="how-text">
+              <strong>In auto</strong>
+              <span>
+                Da Genova centro: prendi la A7 o A26 verso Ovest, esci a
+                <b>Genova Voltri</b> o <b>Genova Aeroporto</b>. Poi segui le indicazioni per
+                Pedemonte / Via Negrotto. Parcheggio disponibile nei pressi del campo.
+                <br><em>⏱ ~25–35 min dal centro città.</em>
+              </span>
+            </div>
+          </div>
+
+          <div class="how-item">
+            <div class="how-icon">🚌</div>
+            <div class="how-text">
+              <strong>In autobus AMT</strong>
+              <span>
+                Linea <b>AMT 1</b> o <b>9</b> fino a Sestri Ponente, poi
+                linea <b>AMT 87</b> verso Pedemonte.
+                Fermata più vicina: <b>Via Negrotto</b>.
+                <br><a href="https://www.amt.genova.it" target="_blank" rel="noopener">amt.genova.it →</a>
+              </span>
+            </div>
+          </div>
+
+          <div class="how-item">
+            <div class="how-icon">🚂</div>
+            <div class="how-text">
+              <strong>In treno + bus</strong>
+              <span>
+                Treno fino a <b>Genova Sestri Ponente</b> (linea Genova–Savona),
+                poi autobus AMT verso Pedemonte.
+                <br><a href="https://www.trenitalia.com" target="_blank" rel="noopener">trenitalia.com →</a>
+              </span>
+            </div>
+          </div>
+
+          <div class="how-item">
+            <div class="how-icon">🚕</div>
+            <div class="how-text">
+              <strong>In taxi / Uber</strong>
+              <span>
+                Taxi Genova: <a href="tel:+390105966">010 5966</a> oppure usa l'app Uber.
+                Costo stimato dal centro: <b>~€15–20</b>.
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </section>
 </main>
 
